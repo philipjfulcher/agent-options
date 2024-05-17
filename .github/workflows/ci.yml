@@ -11,10 +11,12 @@ permissions:
   contents: read
 
 jobs:
-  main:
+  main-agents:
+    name: Nx Cloud - Main Job Agents
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        name: Checkout [Pull Request]
         with:
           fetch-depth: 0
 
@@ -35,3 +37,5 @@ jobs:
       - run: npx nx affected -t lint test build --exclude='*,!tag:react' --no-agents
 
       - run: npx nx-cloud stop-all-agents
+
+
