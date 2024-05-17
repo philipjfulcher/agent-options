@@ -1,0 +1,9 @@
+{
+  "name": "react-lib2",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/react/lib2/src",
+  "projectType": "library",
+  "tags": ["react"],
+  "// targets": "to see all targets run: nx show project react-lib2 --web",
+  "targets": {}
+}

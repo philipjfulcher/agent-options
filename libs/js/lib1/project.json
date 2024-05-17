@@ -1,0 +1,19 @@
+{
+  "name": "js-lib1",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/js/lib1/src",
+  "projectType": "library",
+  "tags": ["js"],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/js/lib1",
+        "main": "libs/js/lib1/src/index.ts",
+        "tsConfig": "libs/js/lib1/tsconfig.lib.json",
+        "assets": ["libs/js/lib1/*.md"]
+      }
+    }
+  }
+}
