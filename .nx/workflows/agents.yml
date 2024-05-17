@@ -1,0 +1,124 @@
+launch-templates:
+  # Custom template name, the name is referenced via --distribute-on="3 my-linux-medium-js"
+  # You can define as many templates as you need, commonly used to make different sizes or toolchains depending on your workspace needs
+  my-linux-medium-js:
+    # see the available resource list below
+    resource-class: 'docker_linux_amd64/medium'
+    # see the available image list below
+    image: 'ubuntu22.04-node20.11-v7'
+    # Define environment variables shared among all steps
+    env:
+      MY_ENV_VAR: shared
+      # list out steps to run on the agent before accepting tasks
+      # the agent will need a copy of the source code and dependencies installed
+    init-steps:
+      - name: Checkout
+        # using a reusable step in an external GitHub repo,
+        # this step is provided by Nx Cloud: https://github.com/nrwl/nx-cloud-workflows/tree/main/workflow-steps
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/checkout/main.yaml'
+      - name: Restore Node Modules Cache
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/cache/main.yaml'
+        # the cache step requires configuration via env vars
+        # https://github.com/nrwl/nx-cloud-workflows/tree/main/workflow-steps/cache#options
+        env:
+          KEY: 'package-lock.json|yarn.lock|pnpm-lock.yaml'
+          PATHS: 'node_modules'
+          BASE_BRANCH: 'main'
+      - name: Restore Browser Binary Cache
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/cache/main.yaml'
+        env:
+          KEY: 'package-lock.json|yarn.lock|pnpm-lock.yaml|"browsers"'
+          PATHS: |
+            '~/.cache/Cypress'
+            '~/.cache/ms-playwright'
+          BASE_BRANCH: 'main'
+      - name: Install Node Modules
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/install-node-modules/main.yaml'
+      - name: Install Browsers (if needed)
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/install-browsers/main.yaml'
+        # You can also run a custom script to configure various things on the agent machine
+      - name: Run a custom script
+        script: |
+          git config --global user.email test@test.com
+          git config --global user.name "Test Test"
+      # You can also set any other env vars to be passed to the following steps
+      # by setting their value in the `$NX_CLOUD_ENV` file.
+      # Most commonly for redefining PATH for further steps
+      - name: Setting env
+        script: |
+          # Update PATH with custom value
+          echo "PATH=$HOME/my-folder:$PATH" >> $NX_CLOUD_ENV
+      - name: Print path from previous step
+        # will include my-folder
+        script: echo $PATH
+      - name: Define env var for a step
+        env:
+          MY_ENV_VAR: 'env-var-for-step'
+        # will print env-var-for-step
+        script: echo $MY_ENV_VAR
+      # after you're last step Nx Agents will start accepting tasks to process
+      # no need to manually start up the agent yourself
+
+  # another template which does the same as above, but with a large resource class
+  # You're not required to define a template for every resource class, only define what you need!
+  my-linux-large-js:
+    resource-class: 'docker_linux_amd64/large'
+    image: 'ubuntu22.04-node20.11-v7'
+    env:
+      MY_ENV_VAR: shared
+    init-steps:
+      - name: Checkout
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/checkout/main.yaml'
+      - name: Restore Node Modules Cache
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/cache/main.yaml'
+        env:
+          KEY: 'package-lock.json|yarn.lock|pnpm-lock.yaml'
+          PATHS: 'node_modules'
+          BASE_BRANCH: 'main'
+      - name: Restore Browser Binary Cache
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/cache/main.yaml'
+        env:
+          KEY: 'package-lock.json|yarn.lock|pnpm-lock.yaml|"browsers"'
+          PATHS: |
+            '~/.cache/Cypress'
+            '~/.cache/ms-playwright'
+          BASE_BRANCH: 'main'
+      - name: Install Node Modules
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/install-node-modules/main.yaml'
+      - name: Install Browsers (if needed)
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/install-browsers/main.yaml'
+      - name: Run a custom script
+        script: |
+          git config --global user.email test@test.com
+          git config --global user.name "Test Test"
+      - name: Setting env
+        script: |
+          echo "PATH=$HOME/my-folder:$PATH" >> $NX_CLOUD_ENV
+      - name: Print path from previous step
+        script: echo $PATH
+      - name: Define env var for a step
+        env:
+          MY_ENV_VAR: 'env-var-for-step'
+        script: echo $MY_ENV_VAR
+  # template that installs rust
+  my-linux-rust-large:
+    resource-class: 'docker_linux_amd64/large'
+    image: 'ubuntu22.04-node20.11-v7'
+    init-steps:
+      - name: Checkout
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/checkout/main.yaml'
+      - name: Restore Node Modules Cache
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/cache/main.yaml'
+        env:
+          KEY: 'package-lock.json|yarn.lock|pnpm-lock.yaml'
+          PATHS: 'node_modules'
+          BASE_BRANCH: 'main'
+      - name: Install Node Modules
+        uses: 'nrwl/nx-cloud-workflows/v3.6/workflow-steps/install-node-modules/main.yaml'
+      - name: Install Rust
+        script: |
+          curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh -s -- -y
+          source "$HOME/.cargo/env"
+          rustup toolchain install 1.70.0
+          # persist cargo bin into PATH
+          echo "PATH=$HOME/.cargo/bin:$PATH" >> $NX_CLOUD_ENV
