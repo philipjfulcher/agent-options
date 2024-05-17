@@ -14,7 +14,12 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@agents-options/js-lib1": ["libs/js/lib1/src/index.ts"],
+      "@agents-options/js-lib2": ["libs/js/lib2/src/index.ts"],
+      "@agents-options/react-lib1": ["libs/react/lib1/src/index.ts"],
+      "@agents-options/react-lib2": ["libs/react/lib2/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
