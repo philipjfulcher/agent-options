@@ -9,7 +9,10 @@
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/eslint.config.js"
     ],
-    "sharedGlobals": ["{workspaceRoot}/.github/**/*","{workspaceRoot}/.nx/workflows/*"]
+    "sharedGlobals": [
+      "{workspaceRoot}/.github/**/*",
+      "{workspaceRoot}/.nx/workflows/*"
+    ]
   },
   "plugins": [
     {
@@ -59,5 +62,7 @@
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
     }
-  }
+  },
+  "nxCloudAccessToken": "MTI4NjRhYzItNGE2ZS00MTA0LWEzYzEtZjkwNzM1NjNlNjYzfHJlYWQtd3JpdGU=",
+  "nxCloudUrl": "https://staging.nx.app"
 }
