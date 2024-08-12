@@ -53,8 +53,6 @@
       }
     }
   },
-  "nxCloudAccessToken": "ZWY5YzIzNjItMTQxOC00ZjU3LWEzMGYtMmQ4ZTYyYTM0NzAzfHJlYWQtd3JpdGU=",
-  "nxCloudUrl": "https://staging.nx.app",
   "targetDefaults": {
     "@nx/vite:build": {
       "cache": true,
