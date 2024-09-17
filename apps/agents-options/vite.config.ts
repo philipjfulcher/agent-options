@@ -45,5 +45,6 @@ export default defineConfig({
       reportsDirectory: '../../coverage/apps/agents-options',
       provider: 'v8',
     },
+    watch: false
   },
 });
