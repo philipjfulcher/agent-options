@@ -1,3 +1,3 @@
 export function jsLib1(): string {
-  return 'js-lib1';
+  return 'js-lib1-error';
 }
