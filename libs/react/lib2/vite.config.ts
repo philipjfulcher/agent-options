@@ -59,5 +59,6 @@ export default defineConfig({
       reportsDirectory: '../../../coverage/libs/react/lib2',
       provider: 'v8',
     },
+    watch: false
   },
 });
